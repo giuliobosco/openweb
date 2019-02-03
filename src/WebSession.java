@@ -51,6 +51,27 @@ public class WebSession extends Thread {
 
     // -------------------------------------------------------------------------------- Help Methods
 
+    private byte[] fileRender(String file) throws IOException {
+        if (file.equals("/")) {
+            file += "index.html";
+        }
+        file = "www" + file;
+
+        Path filePath = Paths.get(file);
+        Path p = Paths.get(".");
+
+        if (Files.exists(filePath) && !Files.notExists(filePath)) {
+            return Files.readAllBytes(filePath);
+        } else {
+            Path error404 = Paths.get("error/404.html");
+            if (Files.exists(error404) && !Files.notExists(error404)) {
+                return Files.readAllBytes(error404);
+            } else {
+                throw new IOException("404 error page not found!");
+            }
+        }
+    }
+
     private byte[] getHttpHeader(String contentType, int fileLength) {
         String header = "HTTP/1.0 200 OK\n"+
                 "Allow: GET\n"+
