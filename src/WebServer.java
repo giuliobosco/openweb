@@ -56,7 +56,7 @@ public class WebServer {
 
             boolean alive = true;
             while (alive) {
-                new WebSession(server.accept()).start();
+                new HttpSession(server.accept()).start();
             }
         } catch (IOException ignored) {
 

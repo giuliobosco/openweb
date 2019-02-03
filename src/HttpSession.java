@@ -32,7 +32,7 @@ import java.nio.file.Paths;
  * @author giuliobosco
  * @version 1.0 (2019-02-01)
  */
-public class WebSession extends Thread {
+public class HttpSession extends Thread {
     // ------------------------------------------------------------------------------------ Costants
 
     public static final String GET = "GET";
@@ -44,7 +44,7 @@ public class WebSession extends Thread {
     // --------------------------------------------------------------------------- Getters & Setters
     // -------------------------------------------------------------------------------- Constructors
 
-    public WebSession(Socket socket) {
+    public HttpSession(Socket socket) {
         this.socket = socket;
     }
 
