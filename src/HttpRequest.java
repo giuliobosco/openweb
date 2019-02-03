@@ -115,6 +115,11 @@ public class HttpRequest {
      */
     private String encoding;
 
+    /**
+     * Other http request values.
+     */
+    private String other;
+
     // --------------------------------------------------------------------------- Getters & Setters
 
     /**
@@ -244,6 +249,7 @@ public class HttpRequest {
     public HttpRequest(BufferedReader client) {
         try {
             String line;
+            this.other = "";
             // check for all lines content
             while ((line = client.readLine()) != null) {
                 if (line.startsWith(GET_METHOD)) {
@@ -269,6 +275,8 @@ public class HttpRequest {
                     initLanguage(line);
                 } else if (line.startsWith("Accept-Encoding:")) {
                     initEncoding(line);
+                } else {
+                    this.other += line + "\n";
                 }
             }
         } catch (IOException ignored) {
