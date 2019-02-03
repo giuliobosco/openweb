@@ -50,6 +50,24 @@ public class WebSession extends Thread {
     }
 
     // -------------------------------------------------------------------------------- Help Methods
+
+    private byte[] getHttpHeader(String contentType, int fileLength) {
+        String header = "HTTP/1.0 200 OK\n"+
+                "Allow: GET\n"+
+                "MIME-Version: 1.0\n"+
+                "Server : HMJ Basic HTTP Server\n"+
+                "Content-Type: "+contentType + "\n"+
+                "Content-Length: "+ fileLength +
+                "\n\n";
+
+        byte[] bytes = new byte[header.length()];
+        for (int  i = 0; i < bytes.length; i++) {
+            bytes[i] = (byte) header.charAt(i);
+        }
+
+        return bytes;
+    }
+
     // ----------------------------------------------------------------------------- General Methods
 
     @Override
