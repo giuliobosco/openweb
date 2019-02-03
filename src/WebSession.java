@@ -29,7 +29,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * 
  * @author giuliobosco
  * @version 1.0 (2019-02-01)
  */
@@ -96,6 +95,7 @@ public class WebSession extends Thread {
         try {
             InputStreamReader input = new InputStreamReader(socket.getInputStream());
             BufferedReader client = new BufferedReader(input);
+            OutputStream out = socket.getOutputStream();
 
             String line;
             while ((line = client.readLine()) != null) {
@@ -108,13 +108,28 @@ public class WebSession extends Thread {
                         String attributesLine = line.substring(line.indexOf('?') + 1, line.lastIndexOf(' '));
                         attributes = attributesLine.split("&");
                     } else {
-                        file = line.substring(line.indexOf(' ') + 1,line.lastIndexOf(' '));
+                        file = line.substring(line.indexOf(' ') + 1, line.lastIndexOf(' '));
                         attributes = new String[0];
                     }
-                    System.out.println(file);
+
+                    byte[] rederedFile = fileRender(file);
+                    byte[] header = getHttpHeader("text/html", rederedFile.length);
+
+                    for (byte b : header) {
+                        out.write(b);
+                    }
+
+                    for (byte b : rederedFile) {
+                        out.write(b);
+                    }
 
                 }
             }
+
+            out.close();
+            client.close();
+            input.close();
+            socket.close();
         } catch (IOException ioe) {
 
         }
@@ -122,5 +137,5 @@ public class WebSession extends Thread {
 
 
     // --------------------------------------------------------------------------- Static Components
-    
+
 }
