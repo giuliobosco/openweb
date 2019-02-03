@@ -50,17 +50,17 @@ public class WebSession extends Thread {
 
     // -------------------------------------------------------------------------------- Help Methods
 
-    private byte[] fileRender(String file) throws IOException {
-        if (file.equals("/")) {
-            file += "index.html";
+    private byte[] fileRender(String filePath) throws IOException {
+        if (filePath.equals("/")) {
+            filePath += "index.html";
         }
-        file = "www" + file;
+        filePath = "www" + filePath;
 
-        Path filePath = Paths.get(file);
+        Path path = Paths.get(filePath);
         Path p = Paths.get(".");
 
-        if (Files.exists(filePath) && !Files.notExists(filePath)) {
-            return Files.readAllBytes(filePath);
+        if (Files.exists(path) && !Files.notExists(path)) {
+            return Files.readAllBytes(path);
         } else {
             Path error404 = Paths.get("error/404.html");
             if (Files.exists(error404) && !Files.notExists(error404)) {
@@ -101,18 +101,18 @@ public class WebSession extends Thread {
             while ((line = client.readLine()) != null) {
                 System.out.println(line);
                 if (line.contains(GET)) {
-                    String file;
+                    String filePath;
                     String[] attributes;
                     if (line.contains("?")) {
-                        file = line.substring(line.indexOf(' ') + 1, line.indexOf('?'));
+                        filePath = line.substring(line.indexOf(' ') + 1, line.indexOf('?'));
                         String attributesLine = line.substring(line.indexOf('?') + 1, line.lastIndexOf(' '));
                         attributes = attributesLine.split("&");
                     } else {
-                        file = line.substring(line.indexOf(' ') + 1, line.lastIndexOf(' '));
+                        filePath = line.substring(line.indexOf(' ') + 1, line.lastIndexOf(' '));
                         attributes = new String[0];
                     }
 
-                    byte[] rederedFile = fileRender(file);
+                    byte[] rederedFile = fileRender(filePath);
                     byte[] header = getHttpHeader("text/html", rederedFile.length);
 
                     for (byte b : header) {
