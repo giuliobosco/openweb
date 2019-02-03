@@ -49,11 +49,6 @@ public class HttpRequest {
     // ---------------------------------------------------------------------------------- Attributes
 
     /**
-     * Client input stream.
-     */
-    private BufferedReader clinet;
-
-    /**
      * Request socket.
      */
     private Socket socket;
@@ -241,9 +236,12 @@ public class HttpRequest {
 
     // -------------------------------------------------------------------------------- Constructors
 
+    /**
+     * Create the http request from the buffered reader on the input incoming from the client.
+     *
+     * @param client Client input buffered reader.
+     */
     public HttpRequest(BufferedReader client) {
-        // set client buffered reader (input)
-        this.clinet = client;
         try {
             String line;
             // check for all lines content
