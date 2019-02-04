@@ -26,6 +26,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.HttpCookie;
 import java.net.Socket;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Http request object.
@@ -67,7 +69,7 @@ public class HttpRequest {
     /**
      * Requested file path.
      */
-    private String filePath;
+    private Path filePath;
 
     /**
      * Request host.
@@ -154,7 +156,7 @@ public class HttpRequest {
      *
      * @return Requested file path.
      */
-    public String getFilePath() {
+    public Path getFilePath() {
         return this.filePath;
     }
 
@@ -297,9 +299,9 @@ public class HttpRequest {
         this.method = GET_METHOD;
         if (line.contains(HttpRequestAttribute.ATTRIBUTE_DIVIDER)) {
             // if request contains attributes setup the file path from the first space to the "?"
-            this.filePath = line.substring(
+            this.filePath = Paths.get(line.substring(
                     line.indexOf(' ') + 1,
-                    line.indexOf(HttpRequestAttribute.ATTRIBUTE_DIVIDER));
+                    line.indexOf(HttpRequestAttribute.ATTRIBUTE_DIVIDER)));
 
             // set up the request attributes
             String attributes = line.substring(
@@ -310,7 +312,8 @@ public class HttpRequest {
         } else {
             // if request do not contains attributes set the file from the first space to the
             // last space
-            this.filePath = line.substring(line.indexOf(' ') + 1, line.lastIndexOf(' '));
+            this.filePath = Paths.get(
+                    line.substring(line.indexOf(' ') + 1, line.lastIndexOf(' ')));
         }
     }
 
