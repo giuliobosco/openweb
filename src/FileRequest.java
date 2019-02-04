@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Request a file to the file system.
@@ -206,6 +207,7 @@ public class FileRequest {
 
             this.file = Files.readAllBytes(path);
             this.fileLenght = file.length;
+            this.status = HttpStatus.OK;
         } else {
             this.status = HttpStatus.NOT_FOUND;
         }
