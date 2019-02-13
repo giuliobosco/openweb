@@ -35,21 +35,44 @@ import java.nio.file.Paths;
 public class HttpSession extends Thread {
     // ------------------------------------------------------------------------------------ Costants
 
+    /**
+     * Get http method string.
+     */
     public static final String GET = "GET";
+
+    /**
+     * Post http method string.
+     */
+    public static final String POST = "POST";
 
     // ---------------------------------------------------------------------------------- Attributes
 
+    /**
+     * Session socket.
+     */
     private Socket socket;
 
     // --------------------------------------------------------------------------- Getters & Setters
     // -------------------------------------------------------------------------------- Constructors
 
+    /**
+     * Create http session with the session socket.
+     *
+     * @param socket Session socket.
+     */
     public HttpSession(Socket socket) {
         this.socket = socket;
     }
 
     // -------------------------------------------------------------------------------- Help Methods
 
+    /**
+     * Read a file from the file system.
+     *
+     * @param filePath Path of the file to read.
+     * @return File as bytes array.
+     * @throws IOException Error while reading from the file system.
+     */
     private byte[] fileRender(String filePath) throws IOException {
         if (filePath.equals("/")) {
             filePath += "index.html";
@@ -62,7 +85,7 @@ public class HttpSession extends Thread {
         if (Files.exists(path) && !Files.notExists(path)) {
             return Files.readAllBytes(path);
         } else {
-            Path error404 = Paths.get("error/404.html");
+            Path error404 = Paths.get("error", "404.html");
             if (Files.exists(error404) && !Files.notExists(error404)) {
                 return Files.readAllBytes(error404);
             } else {
@@ -71,17 +94,24 @@ public class HttpSession extends Thread {
         }
     }
 
+    /**
+     * Get the http header.
+     *
+     * @param contentType Content of the file.
+     * @param fileLength File length.
+     * @return Http header in bytes
+     */
     private byte[] getHttpHeader(String contentType, int fileLength) {
-        String header = "HTTP/1.0 200 OK\n"+
-                "Allow: GET\n"+
-                "MIME-Version: 1.0\n"+
-                "Server : HMJ Basic HTTP Server\n"+
-                "Content-Type: "+contentType + "\n"+
-                "Content-Length: "+ fileLength +
+        String header = "HTTP/1.0 200 OK\n" +
+                "Allow: GET\n" +
+                "MIME-Version: 1.0\n" +
+                "Server : HMJ Basic HTTP Server\n" +
+                "Content-Type: " + contentType + "\n" +
+                "Content-Length: " + fileLength +
                 "\n\n";
 
         byte[] bytes = new byte[header.length()];
-        for (int  i = 0; i < bytes.length; i++) {
+        for (int i = 0; i < bytes.length; i++) {
             bytes[i] = (byte) header.charAt(i);
         }
 
@@ -90,6 +120,9 @@ public class HttpSession extends Thread {
 
     // ----------------------------------------------------------------------------- General Methods
 
+    /**
+     * Run the http session.
+     */
     @Override
     public void run() {
         try {
@@ -100,7 +133,7 @@ public class HttpSession extends Thread {
             String line;
             while ((line = client.readLine()) != null) {
                 System.out.println(line);
-                if (line.contains(GET)) {
+                if (line.contains(GET) || line.contains(POST)) {
                     String filePath;
                     String[] attributes;
                     if (line.contains("?")) {
